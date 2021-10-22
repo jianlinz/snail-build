@@ -1,0 +1,42 @@
+plugins {
+    id 'java-platform' // 引入 java-platform插件
+    id 'maven-publish' // 发布插件，可用来发布 BOM 或 jar到本地与远程仓库
+}
+
+group = "${projectGroup}"
+version = "${projectVersion}"
+
+javaPlatform {
+    allowDependencies()
+}
+
+ext {
+    dependenciesVer = [:]
+}
+
+dependencies {
+    constraints {
+        //统一声明三方包及其版本号
+    }
+}
+
+publishing {
+    publications {
+        //以下maven并非关键字，可自定义
+        maven(MavenPublication) {
+            //通过java-platform生成BOM
+            from components.javaPlatform
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username "${nexusUsername}" // 仓库发布用户名
+                password "${nexusPassword}" // 仓库发布用户密码
+            }
+            def releasesRepoUrl = "${nexusUrl}/repository/maven-releases"
+            def snapshotsRepoUrl = "${nexusUrl}/repository/maven-snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+    }
+}

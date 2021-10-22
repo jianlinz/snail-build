@@ -34,8 +34,8 @@ publishing {
                 username "${nexusUsername}" // 仓库发布用户名
                 password "${nexusPassword}" // 仓库发布用户密码
             }
-            def releasesRepoUrl = "${nexusUrl}/repository/maven-releases"
-            def snapshotsRepoUrl = "${nexusUrl}/repository/maven-snapshots"
+            def releasesRepoUrl = "${nexusReleasesUrl}"
+            def snapshotsRepoUrl = "${nexusSnapshotUrl}"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
         }
     }

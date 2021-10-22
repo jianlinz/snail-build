@@ -3,13 +3,23 @@
  */
 buildscript {
     repositories {
+        maven { url "${nexusPublicUrl}" }
         maven {
-            url "${nexusUrl}/repository/maven-public"
-            credentials(PasswordCredentials) {
-                username = nexusUsername
-                password = nexusPassword
+            url "${nexusReleasesUrl}"
+            credentials {
+                username nexusUsername
+                password nexusPassword
             }
         }
+        maven {
+            url "${nexusSnapshotUrl}"
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }
+        }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenCentral()
     }
     dependencies {
         if (generatorEnable == "true") {
@@ -18,6 +28,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
+
 
 /**
  * 全项目插件配置
@@ -35,13 +46,22 @@ allprojects {
     version = "${projectVersion}"
 
     repositories {
+        maven { url "${nexusPublicUrl}" }
         maven {
-            url "${nexusUrl}/repository/maven-public"
-            credentials(PasswordCredentials) {
-                username = nexusUsername
-                password = nexusPassword
+            url "${nexusReleasesUrl}"
+            credentials {
+                username nexusUsername
+                password nexusPassword
             }
         }
+        maven {
+            url "${nexusSnapshotUrl}"
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }
+        }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         mavenCentral()
     }
 }
@@ -168,10 +188,10 @@ subprojects {
     uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: "${nexusUrl}/repository/maven-releases") {
+                repository(url: "${nexusReleasesUrl}") {
                     authentication(userName: nexusUsername, password: nexusPassword)
                 }
-                snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots") {
+                snapshotRepository(url: "${nexusSnapshotUrl}") {
                     authentication(userName: nexusUsername, password: nexusPassword)
                 }
             }
